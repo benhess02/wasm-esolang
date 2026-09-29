@@ -2,6 +2,7 @@ pub struct Interpreter {
     pub memory: Vec<u8>,
     pub mem_ptr: usize,
     pub print_fn: fn(u8),
+    pub output: Vec<u8>,
 }
 
 pub struct CodeState<'a> {
@@ -65,7 +66,11 @@ impl<'a> CodeState<'a> {
                     self.code_ptr = target;
                 }
             }
-            '.' => (self.interpreter.print_fn)(self.interpreter.memory[self.interpreter.mem_ptr]),
+            '.' => {
+                let value = self.interpreter.memory[self.interpreter.mem_ptr];
+                self.interpreter.output.push(value);
+                (self.interpreter.print_fn)(value)
+            }
             _ => {}
         }
     }
@@ -77,6 +82,7 @@ impl Interpreter {
             memory: vec![0u8; 30000],
             mem_ptr: 0,
             print_fn,
+            output: Vec::new(),
         }
     }
 
