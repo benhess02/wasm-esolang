@@ -1,0 +1,11 @@
+[package]
+name = "wasm-esolang"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
+interpreter = { path = "./interpreter" }
+
+[workspace]
+resolver="3"
+members = ["interpreter"]
