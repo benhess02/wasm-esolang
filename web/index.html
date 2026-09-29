@@ -1,0 +1,45 @@
+<!doctype html>
+<html lang="en">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>Esolang interpreter</title>
+  <style>
+    body { max-width: 48rem; margin: 2rem auto; padding: 0 1rem; font-family: system-ui, sans-serif; }
+    textarea { box-sizing: border-box; width: 100%; min-height: 12rem; font: 1rem monospace; }
+    button { margin: 1rem 0; }
+    pre { min-height: 4rem; padding: 1rem; background: #f2f2f2; white-space: pre-wrap; overflow-wrap: anywhere; }
+  </style>
+</head>
+<body>
+  <h1>Esolang interpreter</h1>
+  <label for="code">Code</label>
+  <textarea id="code" spellcheck="false" autocapitalize="off">++++++++[>++++++++<-]>+.</textarea>
+  <button id="run" type="button" disabled>Run</button>
+  <h2>Output</h2>
+  <pre id="output" role="status"></pre>
+
+  <script type="module">
+    import init, { run } from "./pkg/esolang_web.js";
+
+    const code = document.querySelector("#code");
+    const button = document.querySelector("#run");
+    const output = document.querySelector("#output");
+
+    button.addEventListener("click", () => {
+      try {
+        output.textContent = run(code.value);
+      } catch (error) {
+        output.textContent = `Error: ${String(error)}`;
+      }
+    });
+
+    try {
+      await init();
+      button.disabled = false;
+    } catch (error) {
+      output.textContent = `Could not load interpreter: ${String(error)}`;
+    }
+  </script>
+</body>
+</html>

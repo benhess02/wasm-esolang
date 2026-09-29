@@ -1,10 +1,11 @@
-use std::collections::{hash_map, HashMap};
+use std::collections::{HashMap, hash_map};
 
 pub struct Interpreter {
     pub memory: Vec<u8>,
     pub mem_ptr: usize,
     pub print_fn: fn(u8),
-    pub dog_list: Vec<Dog>
+    pub output: Vec<u8>,
+    pub dog_list: Vec<Dog>,
 }
 
 pub struct CodeState<'a> {
@@ -87,7 +88,11 @@ impl<'a> CodeState<'a> {
                     panic!()
                 }
             }
-            '.' => (self.interpreter.print_fn)(self.interpreter.memory[self.interpreter.mem_ptr]),
+            '.' => {
+                let value = self.interpreter.memory[self.interpreter.mem_ptr];
+                self.interpreter.output.push(value);
+                (self.interpreter.print_fn)(value)
+            }
             _ => {}
         }
     }
@@ -99,7 +104,8 @@ impl Interpreter {
             memory: vec![0u8; 30000],
             mem_ptr: 0,
             print_fn,
-            dog_list: vec![Dog{ptr: None}; 2]
+            output: Vec::new(),
+            dog_list: vec![Dog { ptr: None }; 2],
         }
     }
 

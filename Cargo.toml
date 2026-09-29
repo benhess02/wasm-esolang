@@ -11,4 +11,4 @@ clap = { version = "4.6", features = ["derive"] }
 [workspace]
 
 resolver="3"
-members = ["interpreter"]
+members = ["interpreter", "web"]
