@@ -1,0 +1,5 @@
+- The interpreter is a Rust library that also works as a native Rust CLI
+- This separate web crate uses that library and exports `run` with #[wasm_bindgen], making it callable from javascript
+- `wasm-pack build --target web` compiles the web crate and its Rust dependency to wasm and also generates JS bindings
+- The html page imports those bindings, init() loads the wasm, and the page calls `run()`
+- `miniserve` (or some other webserver) serves the static page and generated files with no need for an application server
