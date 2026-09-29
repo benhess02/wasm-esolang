@@ -1,7 +1,10 @@
+use std::collections::{hash_map, HashMap};
+
 pub struct Interpreter {
     pub memory: Vec<u8>,
     pub mem_ptr: usize,
     pub print_fn: fn(u8),
+    pub dog_list: Vec<Dog>
 }
 
 pub struct CodeState<'a> {
@@ -9,6 +12,11 @@ pub struct CodeState<'a> {
     pub chars: Vec<char>,
     pub code_ptr: usize,
     pub stack: Vec<usize>,
+}
+
+#[derive(Clone)]
+pub struct Dog {
+    pub ptr: Option<usize>,
 }
 
 impl<'a> CodeState<'a> {
@@ -65,6 +73,20 @@ impl<'a> CodeState<'a> {
                     self.code_ptr = target;
                 }
             }
+            '🐕' => {
+                if self.interpreter.dog_list[0].ptr.is_none() {
+                    self.interpreter.dog_list[0].ptr = Some(self.interpreter.mem_ptr)
+                } else {
+                    panic!()
+                }
+            }
+            '🐩' => {
+                if self.interpreter.dog_list[1].ptr.is_none() {
+                    self.interpreter.dog_list[1].ptr = Some(self.interpreter.mem_ptr)
+                } else {
+                    panic!()
+                }
+            }
             '.' => (self.interpreter.print_fn)(self.interpreter.memory[self.interpreter.mem_ptr]),
             _ => {}
         }
@@ -77,6 +99,7 @@ impl Interpreter {
             memory: vec![0u8; 30000],
             mem_ptr: 0,
             print_fn,
+            dog_list: vec![Dog{ptr: None}; 2]
         }
     }
 
