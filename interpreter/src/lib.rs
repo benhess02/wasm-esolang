@@ -1,6 +1,7 @@
 pub struct Interpreter {
     pub memory: Vec<u8>,
     pub mem_ptr: usize,
+    pub print_fn: fn(u8),
 }
 
 pub struct CodeState<'a> {
@@ -59,26 +60,23 @@ impl<'a> CodeState<'a> {
                 }
             }
             ']' => {
+                let target = self.stack.pop().unwrap();
                 if self.interpreter.memory[self.interpreter.mem_ptr] != 0 {
-                    if let Some(ptr) = self.stack.pop() {
-                        self.code_ptr = ptr;
-                    }
+                    self.code_ptr = target;
                 }
             }
-            '.' => print!(
-                "{}",
-                self.interpreter.memory[self.interpreter.mem_ptr] as char
-            ),
+            '.' => (self.interpreter.print_fn)(self.interpreter.memory[self.interpreter.mem_ptr]),
             _ => {}
         }
     }
 }
 
 impl Interpreter {
-    pub fn new() -> Self {
+    pub fn new(print_fn: fn(u8)) -> Self {
         Self {
             memory: vec![0u8; 30000],
             mem_ptr: 0,
+            print_fn,
         }
     }
 

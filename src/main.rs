@@ -24,6 +24,10 @@ enum Commands {
     Run(Run),
 }
 
+fn print_char(b: u8) {
+    print!("{}", b as char);
+}
+
 fn main() {
     let cli = Cli::parse();
 
@@ -36,7 +40,7 @@ fn main() {
 
 fn run(r: Run) -> Result<(), String> {
     let _s: String = std::fs::read_to_string(r.file).map_err(|e| format!("{e}"))?;
-    let mut interpreter = Interpreter::new();
+    let mut interpreter = Interpreter::new(print_char);
     let mut state = interpreter.interpret(&_s);
 
     if r.debug {
